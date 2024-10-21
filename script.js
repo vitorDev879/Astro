@@ -10,3 +10,9 @@ const client = new Client({
         GatewayIntentBits.MessageContent // Ler o conteudo das mensagens
     ]
 });
+
+// Quando o bot ficar online, exibe uma mensagem no terminal 
+client.once('ready', () => {
+    console.log('Bot está online e pronto para uso!');
+});
+
