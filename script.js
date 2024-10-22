@@ -12,7 +12,8 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds, // Gerenciar servidores
         GatewayIntentBits.GuildMessages, // Receber e enviar mensagens
-        GatewayIntentBits.MessageContent // Ler o conteudo das mensagens
+        GatewayIntentBits.MessageContent, // Ler o conteudo das mensagens
+        GatewayIntentBits.GuildMembers
     ]
 });
 
@@ -37,18 +38,25 @@ client.on('messageCreate', async (message) => {
 
         try { 
             // Chamada a API da OpenAI, passando a pergunta e pedindo uma resposta mais longa
-            const respostaIA = await axios.post('https://api.openai.com/v1/completions', {
-                model: 'text-davinci-003', // Modelo de IA
-                prompt: pergunta, // Pergunta do usuario
+            const respostaIA = await axios.post('https://api.openai.com/v1/chat/completions', {
+                model: 'gpt-3.5-turbo', // Modelo de IA
+                messages: [{role: 'user', content: pergunta}], // Pergunta do usuario
                 max_tokens: 50 // Limite menor de tokens, para respostas mais curtas 
             }, {
                 headers: { 
                     'Authorization': `Bearer ${openaiApiKey}`,
-                    'Contet-Type': 'application/json' 
+                    'Content-Type': 'application/json' 
                 }
             });
-
             
+            // Retorna a resposta da IA de volta ao Discord
+            message.reply(respostaIA.data.choices[0].message.content.trim());
+        } catch (error) { 
+            console.error('Erro ao chamar a IA:', error); 
+            message.reply('Desculpe, houve um problema em obter a resposta.');
         }
     }
 });
+
+// Logar o bot com o token do Discord
+client.login(discordToken);
