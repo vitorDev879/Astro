@@ -30,7 +30,7 @@ client.on('messageCreate', async (message) => {
     // Captamos o conteudo da mensagem enviada pelo usuario
     const userMessage = message.content; 
 
-    //Verificar se a mensagem comeca com o comando !pergunta
+    // Verificar se a mensagem comeca com o comando !pergunta
     // Esse comando sera usado para respostas mais detalhadas (limite maior de tokens)
     if (userMessage.startsWith('!pergunta')) { 
         // Extrai o texto apos o comando !pergunta
